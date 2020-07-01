@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<IP2Location_Configuration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Settings>
+    <BIN_File>bin\your_database_file.BIN</BIN_File>
+    <Company_Name></Company_Name>
+    <License_Key></License_Key>
+    <Custom_IP_Server_Variable>HTTP_X_FORWARDED_FOR</Custom_IP_Server_Variable>
+    <Enabled_Server_Variables>True</Enabled_Server_Variables>
+  </Settings>
+  <BlockRules>
+    <BlockRule>
+      <URL_Regex>.*\.php</URL_Regex>
+      <Comparison>NOT IN</Comparison>
+      <Countries>US,CA,MY</Countries>
+      <Enabled_Rule>True</Enabled_Rule>
+    </BlockRule>
+  </BlockRules>
+  <RedirectRules>
+    <RedirectRule>
+      <URL_Regex>.*/Default\.aspx</URL_Regex>
+      <Redirect_To_URL>http://www.google.sg</Redirect_To_URL>
+      <Comparison>IN</Comparison>
+      <Countries>MY,SG,AU</Countries>
+      <Enabled_Rule>True</Enabled_Rule>
+    </RedirectRule>
+  </RedirectRules>
+</IP2Location_Configuration>
