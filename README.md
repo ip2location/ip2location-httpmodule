@@ -88,15 +88,15 @@ If you install in per server mode, you just need to install and configure once a
 What should I change? (ByPassIPs, BlockRules & RedirectRules are optional if you do not require them)
 <ul>
 <li>&lt;BIN_File>The relative path for the BIN database file that you have copied into the bin folder of your website. (relative to the root of your website)</li>
-<li>&lt;Company_Name>*No longer required, just leave this blank</li>
-<li>&lt;License_Key>*No longer required, just leave this blank</li>
-<li>&lt;Custom_IP_Server_Variable>*Leave blank unless you need to read the IP from a custom field.</li>
-<li>&lt;Enabled_Server_Variables>When the value is **True**, your webpages can have access to IP Geolocation data for your visitor’s IP address via server variables. You can turn this off by changing the value to **False**.</li>
+<li>&lt;Company_Name>No longer required, just leave this blank</li>
+<li>&lt;License_Key>No longer required, just leave this blank</li>
+<li>&lt;Custom_IP_Server_Variable>Leave blank unless you need to read the IP from a custom field.</li>
+<li>&lt;Enabled_Server_Variables>When the value is True, your webpages can have access to IP Geolocation data for your visitor’s IP address via server variables. You can turn this off by changing the value to False.</li>
 <li>Under &lt;ByPassIPs>, each &lt;ByPassIP>is used to configure an IP address to bypass the block/redirect rules. Just add another &lt;ByPassIP> segment if you want to have another IP address bypass the rules.</li>
 <li>Under &lt;BlockRules>, each &lt;BlockRule>is used to configure a rule for blocking visitor access to the website. Just add another &lt;BlockRule> segment if you want another rule.</li>
 <li>&lt;URL_Regex>A regular expression string to match various pages and sub-folders.</li>
-<li>&lt;Comparison>Allows 2 values; either **IN** or **NOT IN**. In the case of **IN**, if the visitor’s country is in the &lt;Countries> list for that rule and the &lt;URL_Regex> matches the browsed URL then the visitor will be blocked via a HTTP 403 status.</li>
-<li>&lt;Enabled_Rule>Accepts either **True** or **False** and this just turns on or off the rule.</li>
+<li>&lt;Comparison>Allows 2 values; either IN or NOT IN. In the case of IN, if the visitor’s country is in the &lt;Countries> list for that rule and the &lt;URL_Regex> matches the browsed URL then the visitor will be blocked via a HTTP 403 status.</li>
+<li>&lt;Enabled_Rule>Accepts either True or False and this just turns on or off the rule.</li>
 <li>&lt;RedirectRules> and &lt;RedirectRule> works similar to the &lt;BlockRules>, except the visitor is redirected to the URL specified in &lt;Redirect_To_URL> instead of being blocked.</li>
 </ul>
 
