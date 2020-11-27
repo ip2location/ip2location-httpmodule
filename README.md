@@ -1,9 +1,9 @@
-# IP2Location HTTP Module
+# IP2Location IP Geolocation HTTP Module
 
-This IIS managed module allows user to query an IP address for info such as your visitor’s country of origin, region, city, latitude, longitude, ZIP code, ISP, domain name, time zone, connection speed, IDD code, area code, weather station code, and weather station name, mobile country code (MCC), mobile network code (MNC), carrier brand, usage type and elevation. It lookup the IP address from **IP2Location BIN Data** file. This data file can be downloaded at
+This IIS managed module allows user to get geolocation information about an IP address such as country of origin, region, city, latitude, longitude, ZIP code, ISP, domain name, time zone, connection speed, IDD code, area code, weather station code, and weather station name, mobile country code (MCC), mobile network code (MNC), carrier brand, usage type and elevation. It lookup the IP address from **IP2Location BIN Data** file. This data file can be downloaded at
 
-* Free IP2Location BIN Data: https://lite.ip2location.com
-* Commercial IP2Location BIN Data: https://www.ip2location.com/database/ip2location
+* Free IP2Location IP geolocation BIN Data: https://lite.ip2location.com
+* Commercial IP2Location IP geolocation BIN Data: https://www.ip2location.com/database/ip2location
 
 
 ## Requirements
@@ -26,7 +26,7 @@ ___
 
 ## Installation & Configuration
 
-**NOTE: You can choose to install the IP2Location HTTP Module in either per website mode or per server mode.**
+**NOTE: You can choose to install the IP2Location IP Geolocation HTTP Module in either per website mode or per server mode.**
 
 If you install in per website mode, you will need to install and configure for every website that you wish to add the IP2Location feature.
 If you install in per server mode, you just need to install and configure once and all websites hosted on that machine will be able to use IP2Location.
