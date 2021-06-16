@@ -1,6 +1,6 @@
 # IP2Location IP Geolocation HTTP Module
 
-This IIS managed module allows user to get geolocation information about an IP address such as country of origin, region, city, latitude, longitude, ZIP code, ISP, domain name, time zone, connection speed, IDD code, area code, weather station code, and weather station name, mobile country code (MCC), mobile network code (MNC), carrier brand, usage type and elevation. It lookup the IP address from **IP2Location BIN Data** file. This data file can be downloaded at
+This IIS managed module allows user to get geolocation information about an IP address such as country of origin, region, city, latitude, longitude, ZIP code, ISP, domain name, time zone, connection speed, IDD code, area code, weather station code, and weather station name, mobile country code (MCC), mobile network code (MNC), carrier brand, usage type, elevation, address type and IAB category. It lookup the IP address from **IP2Location BIN Data** file. This data file can be downloaded at
 
 * Free IP2Location IP geolocation BIN Data: https://lite.ip2location.com
 * Commercial IP2Location IP geolocation BIN Data: https://www.ip2location.com/database/ip2location
@@ -184,6 +184,8 @@ Below are the server variables set by the IP2Location HTTP Module. You can use a
 |HTTP_X_COUNTRY_MOBILE_BRAND|Commercial brand associated with the mobile carrier.|
 |HTTP_X_COUNTRY_ELEVATION|Average height of city above sea water in meters (m).|
 |HTTP_X_COUNTRY_USAGE_TYPE|Usage type classification of ISP or company:<ul><li>(COM) Commercial</li><li>(ORG) Organization</li><li>(GOV) Government</li><li>(MIL) Military</li><li>(EDU) University/College/School</li><li>(LIB) Library</li><li>(CDN) Content Delivery Network</li><li>(ISP) Fixed Line ISP</li><li>(MOB) Mobile ISP</li><li>(DCH) Data Center/Web Hosting/Transit</li><li>(SES) Search Engine Spider</li><li>(RSV) Reserved</li></ul>|
+|HTTP_X_COUNTRY_ADDRESS_TYPE|IP address types as defined in Internet Protocol version 4 (IPv4) and Internet Protocol version 6 (IPv6).<ul><li>(A) Anycast - One to the closest</li><li>(U) Unicast - One to one</li><li>(M) Multicast - One to multiple</li><li>(B) Broadcast - One to all</li></ul>|
+|HTTP_X_COUNTRY_CATEGORY|The domain category is based on [IAB Tech Lab Content Taxonomy](https://www.ip2location.com/free/iab-categories). These categories are comprised of Tier-1 and Tier-2 (if available) level categories widely used in services like advertising, Internet security and filtering appliances.|
 ___
 
 ## Sample Codes
@@ -213,6 +215,8 @@ Private Sub ShowServerVariable()
     Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_MOBILE_BRAND") & "<br>")
     Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_ELEVATION") & "<br>")
     Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_USAGE_TYPE") & "<br>")
+    Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_ADDRESS_TYPE") & "<br>")
+    Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_CATEGORY") & "<br>")
 End Sub
 ```
 
@@ -242,6 +246,8 @@ private void ShowServerVariable()
    Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_MOBILE_BRAND"] + "\n");
    Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_ELEVATION"] + "\n");
    Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_USAGE_TYPE"] + "\n");
+   Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_ADDRESS_TYPE"] + "\n");
+   Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_CATEGORY"] + "\n");
 }
 ```
 
@@ -274,6 +280,8 @@ private void ShowServerVariable()
     <%=Request.ServerVariables("HTTP_X_COUNTRY_MOBILE_BRAND") & "<br>"%>
     <%=Request.ServerVariables("HTTP_X_COUNTRY_ELEVATION") & "<br>"%>
     <%=Request.ServerVariables("HTTP_X_COUNTRY_USAGE_TYPE") & "<br>"%>
+    <%=Request.ServerVariables("HTTP_X_COUNTRY_ADDRESS_TYPE") & "<br>"%>
+    <%=Request.ServerVariables("HTTP_X_COUNTRY_CATEGORY") & "<br>"%>
 </body>
 </html>
 ```
@@ -308,6 +316,8 @@ private void ShowServerVariable()
     echo $_SERVER['HTTP_X_COUNTRY_MOBILE_BRAND'] . "<br>";
     echo $_SERVER['HTTP_X_COUNTRY_ELEVATION'] . "<br>";
     echo $_SERVER['HTTP_X_COUNTRY_USAGE_TYPE'] . "<br>";
+    echo $_SERVER['HTTP_X_COUNTRY_ADDRESS_TYPE'] . "<br>";
+    echo $_SERVER['HTTP_X_COUNTRY_CATEGORY'] . "<br>";
 ?>
 </body>
 </html>

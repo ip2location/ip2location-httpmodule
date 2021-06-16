@@ -11,14 +11,14 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("IP2Location HTTP Module")> 
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("IP2Location.com")> 
-<Assembly: AssemblyProduct("IP2LocationHTTPModule")> 
-<Assembly: AssemblyCopyright("Copyright ©  2020")> 
+<Assembly: AssemblyProduct("IP2LocationHTTPModule")>
+<Assembly: AssemblyCopyright("Copyright ©  2021")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("b8c38250-bc6e-4536-a296-61f0666ed5ee")> 
+<Assembly: Guid("b8c38250-bc6e-4536-a296-61f0666ed5ee")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("8.3.0.0")> 
-<Assembly: AssemblyFileVersion("8.3.0.0")> 
+<Assembly: AssemblyVersion("8.4.0.0")>
+<Assembly: AssemblyFileVersion("8.4.0.0")>
