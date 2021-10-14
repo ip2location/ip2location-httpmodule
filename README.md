@@ -13,7 +13,7 @@ This IIS managed module allows user to get geolocation information about an IP a
 * [IntX](https://www.nuget.org/packages/IntX/)
 * [Microsoft ILMerge](https://www.microsoft.com/en-my/download/details.aspx?id=17630)
 
-Supported Microsoft IIS Versions: 7.0, 7.5, 8.0, 8.5 (website needs to be running under a .NET 2.0 application pool in integrated mode)
+Supported Microsoft IIS Versions: 7.0, 7.5, 8.0, 8.5, 10.0 (website needs to be running under a .NET 2.0 application pool in integrated mode)
 
 
 ## Compilation
