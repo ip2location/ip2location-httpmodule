@@ -38,7 +38,7 @@ If you install in per server mode, you just need to install and configure once a
 2. Modify your web.config as below:
 
 ```xml
-<?xmlversion="1.0"encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <system.webServer>
         <modules runAllManagedModulesForAllRequests="true">
@@ -51,7 +51,7 @@ If you install in per server mode, you just need to install and configure once a
 3. Open the IP2Location-config.xml file in your bin folder using any text editor and you can see the below:
 
 ```xml
-<?xmlversion="1.0"encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <IP2Location_Configuration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Settings>
     <BIN_File>bin\your_database_file.BIN</BIN_File>
