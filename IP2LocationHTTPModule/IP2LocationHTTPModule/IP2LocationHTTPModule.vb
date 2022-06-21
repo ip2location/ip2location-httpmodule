@@ -8,7 +8,7 @@
 ' URL          : http://www.ip2location.com
 ' Email        : sales@ip2location.com
 '
-' Copyright (c) 2002-2021 IP2Location.com
+' Copyright (c) 2002-2022 IP2Location.com
 '
 '---------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ Public Class HTTPModule : Implements IHttpModule
     Private globalConfig As String = Nothing
     Private baseDir As String = ""
     Public whitespace As Regex
-    Private ReadOnly version As String = "8.4" 'follow all the paid components versioning
+    Private ReadOnly version As String = "8.5" 'follow all the paid components versioning
 
     Public Sub Dispose() Implements System.Web.IHttpModule.Dispose
         LogDebug.WriteLog("Exiting IP2Location HTTP Module")

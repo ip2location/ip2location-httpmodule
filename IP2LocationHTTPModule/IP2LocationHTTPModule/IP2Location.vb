@@ -3,7 +3,7 @@
 ' URL          : http://www.ip2location.com
 ' Email        : sales@ip2location.com
 '
-' Copyright (c) 2002-2021 IP2Location.com
+' Copyright (c) 2002-2022 IP2Location.com
 '
 ' NOTE: Due IIS 7/7.5/8.0/8.5 being able to easily use .NET 3.5 managed module, this component also has been modified to use .NET 3.5
 '       and for IPv6 calculations we use IntXLib since .NET 3.5 does not come with BigInteger class.
@@ -134,23 +134,29 @@ Public NotInheritable Class IP2Location
         Try
             If _DBFilePath <> "" Then
                 Using myFileStream As New FileStream(_DBFilePath, FileMode.Open, FileAccess.Read)
+                    Dim len = 64 ' 64-byte header
+                    Dim row(len - 1) As Byte
+
+                    myFileStream.Seek(0, SeekOrigin.Begin)
+                    myFileStream.Read(row, 0, len)
+
                     _MetaData = New MetaData
                     With _MetaData
-                        .DBType = Read8(1, myFileStream)
-                        .DBColumn = Read8(2, myFileStream)
-                        .DBYear = Read8(3, myFileStream)
-                        .DBMonth = Read8(4, myFileStream)
-                        .DBDay = Read8(5, myFileStream)
-                        .DBCount = Read32(6, myFileStream) '4 bytes
-                        .BaseAddr = Read32(10, myFileStream) '4 bytes
-                        .DBCountIPv6 = Read32(14, myFileStream) '4 bytes
-                        .BaseAddrIPv6 = Read32(18, myFileStream) '4 bytes
-                        .IndexBaseAddr = Read32(22, myFileStream) '4 bytes
-                        .IndexBaseAddrIPv6 = Read32(26, myFileStream) '4 bytes
-                        .ProductCode = Read8(30, myFileStream)
+                        .DBType = Read8FromHeader(row, 0)
+                        .DBColumn = Read8FromHeader(row, 1)
+                        .DBYear = Read8FromHeader(row, 2)
+                        .DBMonth = Read8FromHeader(row, 3)
+                        .DBDay = Read8FromHeader(row, 4)
+                        .DBCount = Read32FromHeader(row, 5) '4 bytes
+                        .BaseAddr = Read32FromHeader(row, 9) '4 bytes
+                        .DBCountIPv6 = Read32FromHeader(row, 13) '4 bytes
+                        .BaseAddrIPv6 = Read32FromHeader(row, 17) '4 bytes
+                        .IndexBaseAddr = Read32FromHeader(row, 21) '4 bytes
+                        .IndexBaseAddrIPv6 = Read32FromHeader(row, 25) '4 bytes
+                        .ProductCode = Read8FromHeader(row, 29)
                         ' below 2 fields just read for now, not being used yet
-                        .ProductType = Read8(31, myFileStream)
-                        .FileSize = Read32(32, myFileStream) '4 bytes
+                        .ProductType = Read8FromHeader(row, 30)
+                        .FileSize = Read32FromHeader(row, 31) '4 bytes
 
                         ' check if is correct BIN (should be 1 for IP2Location BIN file), also checking for zipped file (PK being the first 2 chars)
                         If (.ProductCode <> 1 AndAlso .DBYear >= 21) OrElse (.DBType = 80 AndAlso .DBColumn = 75) Then ' only BINs from Jan 2021 onwards have this byte set
@@ -219,20 +225,31 @@ Public NotInheritable Class IP2Location
                         CATEGORY_ENABLED = CATEGORY_POSITION(dbt) <> 0
 
                         If .Indexed Then
-                            Dim pointer As Integer = .IndexBaseAddr
+                            Dim readLen = _IndexArrayIPv4.GetLength(0)
+                            If .IndexBaseAddrIPv6 > 0 Then
+                                readLen += _IndexArrayIPv6.GetLength(0)
+                            End If
+
+                            readLen *= 8 ' 4 bytes for both From/To
+                            Dim indexData(readLen - 1) As Byte
+
+                            myFileStream.Seek(.IndexBaseAddr - 1, SeekOrigin.Begin)
+                            myFileStream.Read(indexData, 0, readLen)
+
+                            Dim pointer As Integer = 0
 
                             ' read IPv4 index
                             For x As Integer = _IndexArrayIPv4.GetLowerBound(0) To _IndexArrayIPv4.GetUpperBound(0)
-                                _IndexArrayIPv4(x, 0) = Read32(pointer, myFileStream) '4 bytes for from row
-                                _IndexArrayIPv4(x, 1) = Read32(pointer + 4, myFileStream) '4 bytes for to row
+                                _IndexArrayIPv4(x, 0) = Read32FromHeader(indexData, pointer) '4 bytes for from row
+                                _IndexArrayIPv4(x, 1) = Read32FromHeader(indexData, pointer + 4) '4 bytes for to row
                                 pointer += 8
                             Next
 
                             If .IndexedIPv6 Then
                                 ' read IPv6 index
                                 For x As Integer = _IndexArrayIPv6.GetLowerBound(0) To _IndexArrayIPv6.GetUpperBound(0)
-                                    _IndexArrayIPv6(x, 0) = Read32(pointer, myFileStream) '4 bytes for from row
-                                    _IndexArrayIPv6(x, 1) = Read32(pointer + 4, myFileStream) '4 bytes for to row
+                                    _IndexArrayIPv6(x, 0) = Read32FromHeader(indexData, pointer) '4 bytes for from row
+                                    _IndexArrayIPv6(x, 1) = Read32FromHeader(indexData, pointer + 4) '4 bytes for to row
                                     pointer += 8
                                 Next
                             End If
@@ -280,6 +297,9 @@ Public NotInheritable Class IP2Location
         Dim rowoffset As Long
         Dim rowoffset2 As Long
         Dim myColumnSize As Integer = 0
+        Dim fullRow As Byte() = Nothing
+        Dim row As Byte()
+        Dim firstCol As Integer = 4 ' IP From is 4 bytes
 
         Try
             If myIPAddress = "" OrElse myIPAddress Is Nothing Then
@@ -323,6 +343,7 @@ Public NotInheritable Class IP2Location
                     End If
                 Case 6
                     ' IPv6
+                    firstCol = 16 ' IPv6 is 16 bytes
                     If _MetaData.OldBIN Then ' old IPv4-only BIN don't contain IPv6 data
                         obj.Status = "IPV6_NOT_SUPPORTED"
                         Return obj
@@ -349,8 +370,10 @@ Public NotInheritable Class IP2Location
                 rowoffset = myBaseAddr + (mid * myColumnSize)
                 rowoffset2 = rowoffset + myColumnSize
 
-                ipfrom = Read32or128(rowoffset, myIPType, myFilestream)
-                ipto = Read32or128(rowoffset2, myIPType, myFilestream)
+                ' reading IP From + whole row + next IP From
+                fullRow = ReadRow(rowoffset, myColumnSize + firstCol, myFilestream)
+                ipfrom = Read32Or128Row(fullRow, 0, firstCol)
+                ipto = Read32Or128Row(fullRow, myColumnSize, firstCol)
 
                 If ipnum >= ipfrom AndAlso ipnum < ipto Then
                     Dim country_short As String = MSG_NOT_SUPPORTED
@@ -376,13 +399,10 @@ Public NotInheritable Class IP2Location
                     Dim addresstype As String = MSG_NOT_SUPPORTED
                     Dim category As String = MSG_NOT_SUPPORTED
 
-                    Dim firstCol As Integer = 4 ' for IPv4, IP From is 4 bytes
-                    If myIPType = 6 Then ' IPv6
-                        firstCol = 16 ' 16 bytes for IPv6
-                    End If
+                    Dim rowLen = myColumnSize - firstCol
 
-                    ' read the row here after the IP From column (remaining columns are all 4 bytes)
-                    Dim row() As Byte = ReadRow(rowoffset + firstCol, myColumnSize - firstCol, myFilestream)
+                    ReDim row(rowLen - 1)
+                    Array.Copy(fullRow, firstCol, row, 0, rowLen) ' extract the actual row data
 
                     If COUNTRY_ENABLED Then
                         countrypos = Read32FromRow(row, COUNTRY_POSITION_OFFSET)
@@ -522,6 +542,43 @@ Public NotInheritable Class IP2Location
         End Try
     End Function
 
+    ' Read 8 bits in header
+    Private Function Read8FromHeader(ByRef row() As Byte, ByVal byteOffset As Integer) As Integer
+        Dim _Byte(0) As Byte ' 1 byte
+        Array.Copy(row, byteOffset, _Byte, 0, 1)
+        Return _Byte(0)
+    End Function
+
+    ' Read 32 bits in header
+    Private Function Read32FromHeader(ByRef row() As Byte, ByVal byteOffset As Integer) As Integer
+        Dim _Byte(3) As Byte ' 4 bytes
+        Array.Copy(row, byteOffset, _Byte, 0, 4)
+        Return BitConverter.ToUInt32(_Byte, 0)
+    End Function
+
+    Private Function Read32Or128Row(ByRef row() As Byte, ByVal byteOffset As Integer, ByVal len As Integer) As IntX
+        Try
+            Dim _Byte(len - 1) As Byte
+            Array.Copy(row, byteOffset, _Byte, 0, len)
+            If len = 4 Then
+                Return New IntX(BitConverter.ToUInt32(_Byte, 0).ToString())
+            ElseIf len = 16 Then
+                Dim bigRetVal As IntX
+
+                bigRetVal = New IntX(BitConverter.ToUInt64(_Byte, 8).ToString())
+                bigRetVal *= SHIFT64BIT
+                bigRetVal += New IntX(BitConverter.ToUInt64(_Byte, 0).ToString())
+
+                Return bigRetVal
+            Else
+                Return New IntX()
+            End If
+        Catch ex As Exception
+            LogDebug.WriteLog("Read32Or128Row-" & ex.Message)
+            Return New IntX()
+        End Try
+    End Function
+
     Private Function Read32or128(ByVal _Pos As Long, ByVal _MyIPType As Integer, ByRef MyFilestream As FileStream) As IntX
         If _MyIPType = 4 Then
             Return Read32(_Pos, MyFilestream)
@@ -581,13 +638,17 @@ Public NotInheritable Class IP2Location
     ' Read strings in the database
     Private Function ReadStr(ByVal _Pos As Long, ByRef Myfilestream As FileStream) As String
         Try
-            Dim _Bytes(0) As Byte
-            Dim _Bytes2() As Byte
+            Dim _Size = 256 ' max size of string field + 1 byte for the length
+            Dim _Data(_Size - 1) As Byte
+
+            Dim _Len As Byte
+            Dim _Bytes() As Byte
             Myfilestream.Seek(_Pos, SeekOrigin.Begin)
-            Myfilestream.Read(_Bytes, 0, 1)
-            ReDim _Bytes2(_Bytes(0) - 1)
-            Myfilestream.Read(_Bytes2, 0, _Bytes(0))
-            Return Encoding.Default.GetString(_Bytes2)
+            Myfilestream.Read(_Data, 0, _Size)
+            _Len = _Data(0)
+            ReDim _Bytes(_Len - 1)
+            Array.Copy(_Data, 1, _Bytes, 0, _Len)
+            Return Encoding.Default.GetString(_Bytes)
         Catch ex As Exception
             LogDebug.WriteLog("ReadStr-" & ex.Message)
             Return ""
