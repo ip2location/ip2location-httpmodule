@@ -189,6 +189,9 @@ Below are the server variables set by the IP2Location HTTP Module. You can use a
 |HTTP_X_COUNTRY_DISTRICT|District.|
 |HTTP_X_COUNTRY_ASN|Autonomous System Number.|
 |HTTP_X_COUNTRY_AS|Autonomous System.|
+|HTTP_X_COUNTRY_AS_DOMAIN|Autonomous System domain name.|
+|HTTP_X_COUNTRY_AS_USAGE_TYPE|Autonomous System usage type.|
+|HTTP_X_COUNTRY_AS_CIDR|Autonomous System CIDR.|
 ___
 
 ## Sample Codes
@@ -223,6 +226,9 @@ Private Sub ShowServerVariable()
     Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_DISTRICT") & "<br>")
     Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_ASN") & "<br>")
     Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_AS") & "<br>")
+    Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_AS_DOMAIN") & "<br>")
+    Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_AS_USAGE_TYPE") & "<br>")
+    Response.Write(Request.ServerVariables("HTTP_X_COUNTRY_AS_CIDR") & "<br>")
 End Sub
 ```
 
@@ -257,6 +263,9 @@ private void ShowServerVariable()
    Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_DISTRICT"] + "\n");
    Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_ASN"] + "\n");
    Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_AS"] + "\n");
+   Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_AS_DOMAIN"] + "\n");
+   Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_AS_USAGE_TYPE"] + "\n");
+   Response.Write(Request.ServerVariables["HTTP_X_COUNTRY_AS_CIDR"] + "\n");
 }
 ```
 
@@ -294,6 +303,9 @@ private void ShowServerVariable()
     <%=Request.ServerVariables("HTTP_X_COUNTRY_DISTRICT") & "<br>"%>
     <%=Request.ServerVariables("HTTP_X_COUNTRY_ASN") & "<br>"%>
     <%=Request.ServerVariables("HTTP_X_COUNTRY_AS") & "<br>"%>
+    <%=Request.ServerVariables("HTTP_X_COUNTRY_AS_DOMAIN") & "<br>"%>
+    <%=Request.ServerVariables("HTTP_X_COUNTRY_AS_USAGE_TYPE") & "<br>"%>
+    <%=Request.ServerVariables("HTTP_X_COUNTRY_AS_CIDR") & "<br>"%>
 </body>
 </html>
 ```
@@ -333,6 +345,9 @@ private void ShowServerVariable()
     echo $_SERVER['HTTP_X_COUNTRY_DISTRICT'] . "<br>";
     echo $_SERVER['HTTP_X_COUNTRY_ASN'] . "<br>";
     echo $_SERVER['HTTP_X_COUNTRY_AS'] . "<br>";
+    echo $_SERVER['HTTP_X_COUNTRY_AS_DOMAIN'] . "<br>";
+    echo $_SERVER['HTTP_X_COUNTRY_AS_USAGE_TYPE'] . "<br>";
+    echo $_SERVER['HTTP_X_COUNTRY_AS_CIDR'] . "<br>";
 ?>
 </body>
 </html>

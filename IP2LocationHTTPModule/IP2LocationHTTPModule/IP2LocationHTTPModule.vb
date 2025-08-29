@@ -8,7 +8,7 @@
 ' URL          : http://www.ip2location.com
 ' Email        : sales@ip2location.com
 '
-' Copyright (c) 2002-2023 IP2Location.com
+' Copyright (c) 2002-2025 IP2Location.com
 '
 '---------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ Public Class HTTPModule : Implements IHttpModule
     Private globalConfig As String = Nothing
     Private baseDir As String = ""
     Public whitespace As Regex
-    Private ReadOnly version As String = "8.6" 'follow all the paid components versioning
+    Private ReadOnly version As String = "8.7" 'follow all the paid components versioning
 
     Public Sub Dispose() Implements System.Web.IHttpModule.Dispose
         LogDebug.WriteLog("Exiting IP2Location HTTP Module")
@@ -186,6 +186,9 @@ Public Class HTTPModule : Implements IHttpModule
                 request.ServerVariables.Item("HTTP_X_COUNTRY_DISTRICT") = oIPResult.District
                 request.ServerVariables.Item("HTTP_X_COUNTRY_ASN") = oIPResult.ASN
                 request.ServerVariables.Item("HTTP_X_COUNTRY_AS") = oIPResult.AS
+                request.ServerVariables.Item("HTTP_X_COUNTRY_AS_DOMAIN") = oIPResult.ASDomain
+                request.ServerVariables.Item("HTTP_X_COUNTRY_AS_USAGE_TYPE") = oIPResult.ASUsageType
+                request.ServerVariables.Item("HTTP_X_COUNTRY_AS_CIDR") = oIPResult.ASCIDR
             End If
         End If
     End Sub

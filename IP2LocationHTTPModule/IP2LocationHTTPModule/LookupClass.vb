@@ -3,7 +3,7 @@
 ' URL          : http://www.ip2location.com
 ' Email        : sales@ip2location.com
 '
-' Copyright (c) 2002-2023 IP2Location.com
+' Copyright (c) 2002-2025 IP2Location.com
 '---------------------------------------------------------------------------
 Public Class IPResult
     Dim m_ip As String = "?"
@@ -33,6 +33,9 @@ Public Class IPResult
     Dim m_district As String = "?"
     Dim m_asn As String = "?"
     Dim m_as As String = "?"
+    Dim m_as_domain As String = "?"
+    Dim m_as_usagetype As String = "?"
+    Dim m_as_cidr As String = "?"
     Dim m_status As String = "?"
 
     ' Description: Get/Set the value of IPAddress
@@ -302,6 +305,36 @@ Public Class IPResult
         End Get
         Set(ByVal Value As String)
             m_as = Value
+        End Set
+    End Property
+
+    ' Description: Get/Set the value of AS domain
+    Public Property ASDomain() As String
+        Get
+            Return m_as_domain
+        End Get
+        Set(ByVal Value As String)
+            m_as_domain = Value
+        End Set
+    End Property
+
+    ' Description: Get/Set the value of AS usage type
+    Public Property ASUsageType() As String
+        Get
+            Return m_as_usagetype
+        End Get
+        Set(ByVal Value As String)
+            m_as_usagetype = Value
+        End Set
+    End Property
+
+    ' Description: Get/Set the value of AS CIDR
+    Public Property ASCIDR() As String
+        Get
+            Return m_as_cidr
+        End Get
+        Set(ByVal Value As String)
+            m_as_cidr = Value
         End Set
     End Property
 

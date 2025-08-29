@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("IP2Location.com")> 
 <Assembly: AssemblyProduct("IP2LocationHTTPModule")>
-<Assembly: AssemblyCopyright("Copyright ©  2022")>
+<Assembly: AssemblyCopyright("Copyright ©  2025")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("8.5.0.0")>
-<Assembly: AssemblyFileVersion("8.5.0.0")>
+<Assembly: AssemblyVersion("8.7.0.0")>
+<Assembly: AssemblyFileVersion("8.7.0.0")>
