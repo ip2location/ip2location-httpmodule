@@ -25,7 +25,7 @@ Public Class HTTPModule : Implements IHttpModule
     Private globalConfig As String = Nothing
     Private baseDir As String = ""
     Public whitespace As Regex
-    Private ReadOnly version As String = "8.7" 'follow all the paid components versioning
+    Private ReadOnly version As String = "8.8" 'follow all the paid components versioning
 
     Public Sub Dispose() Implements System.Web.IHttpModule.Dispose
         LogDebug.WriteLog("Exiting IP2Location HTTP Module")
@@ -77,7 +77,7 @@ Public Class HTTPModule : Implements IHttpModule
         Dim myrule As BlockRule
         Dim myrule2 As RedirectRule
         Dim myIP As String
-        Dim myurl As String = request.Url.AbsoluteUri
+        Dim myurl As String
         Dim bypass As Boolean = False
         Dim bypassip As ByPassIP
         ' PRODUCTION ONE
@@ -86,6 +86,20 @@ Public Class HTTPModule : Implements IHttpModule
         Else
             myIP = request.UserHostAddress
         End If
+
+        Try
+            ' Try the safe version first
+            myurl = request.Url.AbsoluteUri
+        Catch ex As UriFormatException
+            Dim rawHost As String = request.ServerVariables("HTTP_HOST")
+            Dim rawUrl As String = request.RawUrl
+            Dim scheme As String = If(request.IsSecureConnection, "https", "http")
+
+            ' Build manually, even if invalid
+            myurl = $"{scheme}://{rawHost}{rawUrl}"
+            LogDebug.WriteLog("Invalid URI encountered. Raw URL: " & myurl)
+            Exit Sub
+        End Try
 
         ' output extra info so we know it is working
         LogDebug.WriteLog("Querying IP: " & myIP)
